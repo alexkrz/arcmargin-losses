@@ -13,36 +13,6 @@ from models import ConvAngularPen, ConvBaseline
 from plotting import plot
 
 
-def main():
-    train_ds = datasets.FashionMNIST(
-        root="./data",
-        train=True,
-        transform=transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean=(0.1307,), std=(0.3081,))]),
-        download=True,
-    )
-    train_loader = DataLoader(dataset=train_ds, batch_size=args.batch_size, shuffle=True)
-    example_loader = DataLoader(dataset=train_ds, batch_size=args.batch_size, shuffle=False)
-
-    os.makedirs("./figs", exist_ok=True)
-
-    print("Training Baseline model....")
-    model_baseline = train_baseline(train_loader)
-    bl_embeds, bl_labels = get_embeds(model_baseline, example_loader)
-    plot(bl_embeds, bl_labels, fig_path="./figs/baseline.png")
-    print("Saved Baseline figure")
-
-    del model_baseline, bl_embeds, bl_labels
-
-    loss_types = ["cosface", "sphereface", "arcface"]
-    for loss_type in loss_types:
-        print("Training {} model....".format(loss_type))
-        model_am = train_am(train_loader, loss_type)
-        am_embeds, am_labels = get_embeds(model_am, example_loader)
-        plot(am_embeds, am_labels, fig_path="./figs/{}.png".format(loss_type))
-        print("Saved {} figure".format(loss_type))
-        del model_am, am_embeds, am_labels
-
-
 def train_baseline(train_loader):
     model = ConvBaseline().to(device)
     criterion = nn.CrossEntropyLoss()
@@ -107,6 +77,36 @@ def get_embeds(model, loader):
             full_embeds.append(F.normalize(embeds.detach().cpu()).numpy())
     model = model.cpu()
     return np.concatenate(full_embeds), np.concatenate(full_labels)
+
+
+def main():
+    train_ds = datasets.FashionMNIST(
+        root="./data",
+        train=True,
+        transform=transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean=(0.1307,), std=(0.3081,))]),
+        download=True,
+    )
+    train_loader = DataLoader(dataset=train_ds, batch_size=args.batch_size, shuffle=True)
+    example_loader = DataLoader(dataset=train_ds, batch_size=args.batch_size, shuffle=False)
+
+    os.makedirs("./figs", exist_ok=True)
+
+    print("Training Baseline model....")
+    model_baseline = train_baseline(train_loader)
+    bl_embeds, bl_labels = get_embeds(model_baseline, example_loader)
+    plot(bl_embeds, bl_labels, fig_path="./figs/baseline.png")
+    print("Saved Baseline figure")
+
+    del model_baseline, bl_embeds, bl_labels
+
+    loss_types = ["cosface", "sphereface", "arcface"]
+    for loss_type in loss_types:
+        print("Training {} model....".format(loss_type))
+        model_am = train_am(train_loader, loss_type)
+        am_embeds, am_labels = get_embeds(model_am, example_loader)
+        plot(am_embeds, am_labels, fig_path="./figs/{}.png".format(loss_type))
+        print("Saved {} figure".format(loss_type))
+        del model_am, am_embeds, am_labels
 
 
 def parse_args():
