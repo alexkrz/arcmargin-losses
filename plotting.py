@@ -1,13 +1,13 @@
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib import cm, colors
 from mpl_toolkits.mplot3d import Axes3D
-import numpy as np
 
 
 def plot(embeds, labels, fig_path='./example.pdf'):
 
     fig = plt.figure(figsize=(10,10))
-    ax = fig.add_subplot(111, projection='3d')
+    ax: Axes3D = fig.add_subplot(111, projection='3d')
 
     # Create a sphere
     r = 1

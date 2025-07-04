@@ -5,6 +5,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 from tqdm import tqdm
 
@@ -19,12 +20,14 @@ def main():
                                     transform=transforms.Compose([transforms.ToTensor(),
                                                                   transforms.Normalize(mean=(0.1307,), std=(0.3081,))]),
                                     download=True)
-    train_loader = torch.utils.data.DataLoader(dataset=train_ds,
-                                            batch_size=args.batch_size,
-                                            shuffle=True)
-    example_loader = torch.utils.data.DataLoader(dataset=train_ds,
-                                            batch_size=args.batch_size,
-                                            shuffle=False)
+    train_loader = DataLoader(
+                            dataset=train_ds,
+                            batch_size=args.batch_size,
+                            shuffle=True)
+    example_loader = DataLoader(
+                            dataset=train_ds,
+                            batch_size=args.batch_size,
+                            shuffle=False)
 
     os.makedirs('./figs', exist_ok=True)
 
