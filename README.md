@@ -2,9 +2,9 @@
 
 Concise Pytorch implementation of the Angular Penalty Softmax Losses presented in:
 
-* ArcFace: <https://arxiv.org/abs/1801.07698> [1]
-* SphereFace: <https://arxiv.org/abs/1704.08063> [2]
-* CosFace/Additive Margin: <https://arxiv.org/abs/1801.09414> [3] / <https://arxiv.org/abs/1801.05599> [4]
+- ArcFace: <https://arxiv.org/abs/1801.07698> [1]
+- SphereFace: <https://arxiv.org/abs/1704.08063> [2]
+- CosFace/Additive Margin: <https://arxiv.org/abs/1801.09414> [3] / <https://arxiv.org/abs/1801.05599> [4]
 
 (Note: the SphereFace implementation is not exactly as described in their paper but instead uses the 'trick' presented in the ArcFace paper to use arccosine instead of the double angle formula)
 
@@ -48,8 +48,6 @@ Which produces the following results:
 
 ![arcface](figs/arcface.png?raw=true "arcface")
 
-TODO: fix sphereface results
-
 [1] Deng, J. et al. (2018) ‘ArcFace: Additive Angular Margin Loss for Deep Face Recognition’. Available at: <http://arxiv.org/abs/1801.07698>.
 
 [2] Liu, W. et al. (2017) ‘SphereFace: Deep hypersphere embedding for face recognition’, in Proceedings - 30th IEEE Conference on Computer Vision and Pattern Recognition, CVPR 2017, pp. 6738–6746. doi: 10.1109/CVPR.2017.713.
@@ -59,3 +57,7 @@ TODO: fix sphereface results
 [4] “Additive Margin Softmax for Face Verification.” Wang, Feng, Jian Cheng, Weiyang Liu and Haijun Liu. IEEE Signal Processing Letters 25 (2018): 926-930.
 
 [5] "Fashion-MNIST: a Novel Image Dataset for Benchmarking Machine Learning Algorithms." Han Xiao, Kashif Rasul, Roland Vollgraf. arXiv:1708.07747
+
+## TODOs
+
+- [ ] Split `train_fMNIST.py` into one file for training where we store model checkpoints and one file for evaluation
