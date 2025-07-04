@@ -20,7 +20,7 @@ criterion = AngularPenaltySMLoss(in_features, out_features, loss_type='arcface')
 # Forward method works similarly to nn.CrossEntropyLoss
 # x of shape (batch_size, in_features), labels of shape (batch_size,)
 # labels should indicate class of each sample, and should be an int, l satisying 0 <= l < out_dim
-loss = criterion(x, labels) 
+loss = criterion(x, labels)
 loss.backward()
 ```
 
