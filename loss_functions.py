@@ -16,7 +16,7 @@ class AngularPenaltySMLoss(nn.Module):
         CosFace/Ad Margin: https://arxiv.org/abs/1801.05599
 
         """
-        super(AngularPenaltySMLoss, self).__init__()
+        super().__init__()
         loss_type = loss_type.lower()
         assert loss_type in ["arcface", "sphereface", "cosface"]
         if loss_type == "arcface":

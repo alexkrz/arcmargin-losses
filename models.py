@@ -6,7 +6,7 @@ from loss_functions import AngularPenaltySMLoss
 
 class ConvNet(nn.Module):
     def __init__(self):
-        super(ConvNet, self).__init__()
+        super().__init__()
         self.layer1 = nn.Sequential(
             nn.Conv2d(1, 32, kernel_size=3, stride=1, padding=0), nn.ReLU(), nn.BatchNorm2d(32)
         )
@@ -43,7 +43,7 @@ class ConvNet(nn.Module):
 
 class ConvBaseline(nn.Module):
     def __init__(self, num_classes=10):
-        super(ConvBaseline, self).__init__()
+        super().__init__()
         self.convlayers = ConvNet()
         self.fc_final = nn.Linear(3, num_classes)
 
@@ -57,7 +57,7 @@ class ConvBaseline(nn.Module):
 
 class ConvAngularPen(nn.Module):
     def __init__(self, num_classes=10, loss_type="arcface"):
-        super(ConvAngularPen, self).__init__()
+        super().__init__()
         self.convlayers = ConvNet()
         self.adms_loss = AngularPenaltySMLoss(3, num_classes, loss_type=loss_type)
 

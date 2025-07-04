@@ -33,6 +33,13 @@ repos:
         args:
           - --line-length=119
 
+    # python upgrading syntax to newer version
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.19.0
+    hooks:
+      - id: pyupgrade
+        args: [--py38-plus]
+
   # Jupyter notebook cell output clearing
   - repo: https://github.com/kynan/nbstripout
     rev: 0.8.1

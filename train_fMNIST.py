@@ -101,11 +101,11 @@ def main():
 
     loss_types = ["cosface", "sphereface", "arcface"]
     for loss_type in loss_types:
-        print("Training {} model....".format(loss_type))
+        print(f"Training {loss_type} model....")
         model_am = train_am(train_loader, loss_type)
         am_embeds, am_labels = get_embeds(model_am, example_loader)
-        plot(am_embeds, am_labels, fig_path="./figs/{}.png".format(loss_type))
-        print("Saved {} figure".format(loss_type))
+        plot(am_embeds, am_labels, fig_path=f"./figs/{loss_type}.png")
+        print(f"Saved {loss_type} figure")
         del model_am, am_embeds, am_labels
 
 
