@@ -48,8 +48,8 @@ def train_baseline(train_loader):
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
     total_step = len(train_loader)
-    for epoch in tqdm(range(args.num_epochs)):
-        for i, (feats, labels) in enumerate(tqdm(train_loader)):
+    for epoch in tqdm(range(args.num_epochs), desc="Epochs"):
+        for i, (feats, labels) in enumerate(tqdm(train_loader, leave=False, desc="Batches")):
             feats = feats.to(device)
             labels = labels.to(device)
             out = model(feats)
@@ -58,7 +58,7 @@ def train_baseline(train_loader):
             loss.backward()
             optimizer.step()
             if (i + 1) % 100 == 0:
-                print(
+                tqdm.write(
                     "Baseline: Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}".format(
                         epoch + 1, args.num_epochs, i + 1, total_step, loss.item()
                     )
@@ -73,8 +73,8 @@ def train_am(train_loader, loss_type):
     model = ConvAngularPen(loss_type=loss_type).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
     total_step = len(train_loader)
-    for epoch in tqdm(range(args.num_epochs)):
-        for i, (feats, labels) in enumerate(tqdm(train_loader)):
+    for epoch in tqdm(range(args.num_epochs), desc=f"{loss_type} Epochs"):
+        for i, (feats, labels) in enumerate(tqdm(train_loader, leave=False, desc="Batches")):
             feats = feats.to(device)
             labels = labels.to(device)
             loss = model(feats, labels=labels)
@@ -82,7 +82,7 @@ def train_am(train_loader, loss_type):
             loss.backward()
             optimizer.step()
             if (i + 1) % 100 == 0:
-                print(
+                tqdm.write(
                     "{}: Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}".format(
                         loss_type, epoch + 1, args.num_epochs, i + 1, total_step, loss.item()
                     )
