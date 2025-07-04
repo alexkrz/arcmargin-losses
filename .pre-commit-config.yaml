@@ -19,7 +19,7 @@ repos:
 
   # Ruff formatter
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.11.6
+    rev: v0.12.2
     hooks:
       - id: ruff # This is the linter
         args:
@@ -35,7 +35,7 @@ repos:
 
     # python upgrading syntax to newer version
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.19.0
+    rev: v3.20.0
     hooks:
       - id: pyupgrade
         args: [--py38-plus]
@@ -48,7 +48,7 @@ repos:
 
   # Markdown linter
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.44.0
+    rev: v0.45.0
     hooks:
       - id: markdownlint
         args:
