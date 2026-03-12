@@ -1,7 +1,12 @@
+# IDE
+/.vscode
+
+# Files
 ._*
 *.pyc
 *.pt
-data/*
 
-# IDE
-/.vscode/
+# Directories
+__pycache__/
+/data
+/figs_custom

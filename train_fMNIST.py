@@ -74,6 +74,7 @@ def get_embeds(model, loader):
             feats = feats[:100].to(device)
             full_labels.append(labels[:100].cpu().detach().numpy())
             embeds = model(feats, embed=True)
+            # NOTE: Here the embeddings are normalized to lie on the unit sphere
             full_embeds.append(F.normalize(embeds.detach().cpu()).numpy())
     model = model.cpu()
     return np.concatenate(full_embeds), np.concatenate(full_labels)
@@ -89,7 +90,7 @@ def main():
     train_loader = DataLoader(dataset=train_ds, batch_size=args.batch_size, shuffle=True)
     example_loader = DataLoader(dataset=train_ds, batch_size=args.batch_size, shuffle=False)
 
-    os.makedirs("./figs", exist_ok=True)
+    os.makedirs("./figs_custom", exist_ok=True)
 
     print("Training Baseline model....")
     model_baseline = train_baseline(train_loader)
