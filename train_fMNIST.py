@@ -95,17 +95,17 @@ def main():
     print("Training Baseline model....")
     model_baseline = train_baseline(train_loader)
     bl_embeds, bl_labels = get_embeds(model_baseline, example_loader)
-    plot(bl_embeds, bl_labels, fig_path="./figs/baseline.png")
+    plot(bl_embeds, bl_labels, fig_path="./figs_custom/baseline.png")
     print("Saved Baseline figure")
 
     del model_baseline, bl_embeds, bl_labels
 
-    loss_types = ["cosface", "sphereface", "arcface"]
+    loss_types = ["arcface"]
     for loss_type in loss_types:
         print(f"Training {loss_type} model....")
         model_am = train_am(train_loader, loss_type)
         am_embeds, am_labels = get_embeds(model_am, example_loader)
-        plot(am_embeds, am_labels, fig_path=f"./figs/{loss_type}.png")
+        plot(am_embeds, am_labels, fig_path=f"./figs_custom/{loss_type}.png")
         print(f"Saved {loss_type} figure")
         del model_am, am_embeds, am_labels
 

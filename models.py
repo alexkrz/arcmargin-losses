@@ -1,7 +1,13 @@
 import torch.nn as nn
 import torch.nn.functional as F
 
-from loss_functions import AngularPenaltySMLoss
+from loss_functions import AngularPenaltySMLoss, ArcFaceHeader, CosFaceHeader, SphereFaceHeader
+
+header_dict = {
+    "arcface": ArcFaceHeader,
+    "cosface": CosFaceHeader,
+    "sphereface": SphereFaceHeader,
+}
 
 
 class ConvNet(nn.Module):
@@ -58,12 +64,16 @@ class ConvBaseline(nn.Module):
 class ConvAngularPen(nn.Module):
     def __init__(self, num_classes=10, loss_type="arcface"):
         super().__init__()
+        assert loss_type in header_dict.keys()
         self.convlayers = ConvNet()
-        self.adms_loss = AngularPenaltySMLoss(3, num_classes, loss_type=loss_type)
+        # self.adms_loss = AngularPenaltySMLoss(3, num_classes, loss_type=loss_type)
+        self.adms_loss = header_dict[loss_type](3, num_classes)
 
     def forward(self, x, labels=None, embed=False):
         x = self.convlayers(x)
         if embed:
             return x
-        L = self.adms_loss(x, labels)
+        # L = self.adms_loss(x, labels)
+        logits = self.adms_loss(x, labels)
+        L = F.cross_entropy(logits, labels)
         return L
