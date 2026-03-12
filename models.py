@@ -11,7 +11,7 @@ header_dict = {
 
 
 class ConvNet(nn.Module):
-    def __init__(self):
+    def __init__(self, embed_dim=3):
         super().__init__()
         self.layer1 = nn.Sequential(
             nn.Conv2d(1, 32, kernel_size=3, stride=1, padding=0), nn.ReLU(), nn.BatchNorm2d(32)
@@ -34,7 +34,7 @@ class ConvNet(nn.Module):
             nn.BatchNorm2d(512),
             nn.MaxPool2d(kernel_size=8, stride=1),
         )
-        self.fc_projection = nn.Linear(512, 3)
+        self.fc_projection = nn.Linear(512, embed_dim)
 
     def forward(self, x, embed=False):
         x = self.layer1(x)
@@ -48,10 +48,10 @@ class ConvNet(nn.Module):
 
 
 class ConvBaseline(nn.Module):
-    def __init__(self, num_classes=10):
+    def __init__(self, num_classes=10, embed_dim=3):
         super().__init__()
-        self.convlayers = ConvNet()
-        self.fc_final = nn.Linear(3, num_classes)
+        self.convlayers = ConvNet(embed_dim)
+        self.fc_final = nn.Linear(embed_dim, num_classes)
 
     def forward(self, x, embed=False):
         x = self.convlayers(x)
@@ -62,12 +62,12 @@ class ConvBaseline(nn.Module):
 
 
 class ConvAngularPen(nn.Module):
-    def __init__(self, num_classes=10, loss_type="arcface"):
+    def __init__(self, num_classes=10, embed_dim=3, loss_type="arcface"):
         super().__init__()
         assert loss_type in header_dict.keys()
-        self.convlayers = ConvNet()
-        # self.adms_loss = AngularPenaltySMLoss(3, num_classes, loss_type=loss_type)
-        self.adms_loss = header_dict[loss_type](3, num_classes)
+        self.convlayers = ConvNet(embed_dim)
+        # self.adms_loss = AngularPenaltySMLoss(embed_dim, num_classes, loss_type=loss_type)
+        self.adms_loss = header_dict[loss_type](embed_dim, num_classes)
 
     def forward(self, x, labels=None, embed=False):
         x = self.convlayers(x)

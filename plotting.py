@@ -4,7 +4,7 @@ from matplotlib import cm, colors
 from mpl_toolkits.mplot3d import Axes3D
 
 
-def plot(embeds, labels, fig_path="./example.pdf"):
+def plot_3d(embeds, labels, fig_path="./example.png"):
     fig = plt.figure(figsize=(10, 10))
     ax: Axes3D = fig.add_subplot(111, projection="3d")
 
@@ -26,3 +26,22 @@ def plot(embeds, labels, fig_path="./example.pdf"):
     ax.set_aspect("equal")
     plt.tight_layout()
     plt.savefig(fig_path)
+
+
+def plot_2d(embeds, labels, fig_path="./example.png"):
+    """
+    Plots 2D embeddings on the unit circle, colored by label.
+    """
+    fig, ax = plt.subplots(figsize=(8, 8))
+
+    # Draw unit circle
+    circle = plt.Circle((0, 0), 1, color="gray", fill=False, linestyle="--", linewidth=2)
+    ax.add_artist(circle)
+
+    scatter = ax.scatter(embeds[:, 0], embeds[:, 1], c=labels, s=20, cmap="tab10", alpha=0.8)
+    ax.set_xlim([-1.1, 1.1])
+    ax.set_ylim([-1.1, 1.1])
+    ax.set_aspect("equal")
+    plt.tight_layout()
+    plt.savefig(fig_path)
+    plt.close(fig)

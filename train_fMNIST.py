@@ -10,11 +10,11 @@ from torchvision import datasets, transforms
 from tqdm import tqdm
 
 from models import ConvAngularPen, ConvBaseline
-from plotting import plot
+from plotting import plot_2d, plot_3d
 
 
-def train_baseline(train_loader):
-    model = ConvBaseline().to(device)
+def train_baseline(train_loader, embed_dim):
+    model = ConvBaseline(embed_dim=embed_dim).to(device)
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
     total_step = len(train_loader)
@@ -39,8 +39,8 @@ def train_baseline(train_loader):
     return model.cpu()
 
 
-def train_am(train_loader, loss_type):
-    model = ConvAngularPen(loss_type=loss_type).to(device)
+def train_am(train_loader, embed_dim, loss_type):
+    model = ConvAngularPen(embed_dim=embed_dim, loss_type=loss_type).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
     total_step = len(train_loader)
     for epoch in tqdm(range(args.num_epochs), desc=f"{loss_type} Epochs"):
@@ -80,7 +80,7 @@ def get_embeds(model, loader):
     return np.concatenate(full_embeds), np.concatenate(full_labels)
 
 
-def main():
+def main(args: argparse.Namespace):
     train_ds = datasets.FashionMNIST(
         root="./data",
         train=True,
@@ -93,19 +93,25 @@ def main():
     os.makedirs("./figs_custom", exist_ok=True)
 
     print("Training Baseline model....")
-    model_baseline = train_baseline(train_loader)
+    model_baseline = train_baseline(train_loader, args.embed_dim)
     bl_embeds, bl_labels = get_embeds(model_baseline, example_loader)
-    plot(bl_embeds, bl_labels, fig_path="./figs_custom/baseline.png")
+    if args.embed_dim == 2:
+        plot_2d(bl_embeds, bl_labels, fig_path="./figs_custom/baseline.png")
+    else:
+        plot_3d(bl_embeds, bl_labels, fig_path="./figs_custom/baseline.png")
     print("Saved Baseline figure")
 
     del model_baseline, bl_embeds, bl_labels
 
-    loss_types = ["arcface"]
+    loss_types = ["arcface", "cosface", "sphereface"]
     for loss_type in loss_types:
         print(f"Training {loss_type} model....")
-        model_am = train_am(train_loader, loss_type)
+        model_am = train_am(train_loader, args.embed_dim, loss_type)
         am_embeds, am_labels = get_embeds(model_am, example_loader)
-        plot(am_embeds, am_labels, fig_path=f"./figs_custom/{loss_type}.png")
+        if args.embed_dim == 2:
+            plot_2d(am_embeds, am_labels, fig_path=f"./figs_custom/{loss_type}.png")
+        else:
+            plot_3d(am_embeds, am_labels, fig_path=f"./figs_custom/{loss_type}.png")
         print(f"Saved {loss_type} figure")
         del model_am, am_embeds, am_labels
 
@@ -113,6 +119,7 @@ def main():
 def parse_args():
     parser = argparse.ArgumentParser(description="Run Angular Penalty and Baseline experiments in fMNIST")
     parser.add_argument("--batch-size", type=int, default=512, help="input batch size for training (default: 512)")
+    parser.add_argument("--embed_dim", type=int, default=3, help="Latent space dimension")
     parser.add_argument(
         "--num-epochs", type=int, default=40, help="Number of epochs to train each model for (default: 20)"
     )
@@ -128,4 +135,4 @@ if __name__ == "__main__":
     use_cuda = args.use_cuda and torch.cuda.is_available()
     device = torch.device("cuda" if use_cuda else "cpu")
     torch.manual_seed(args.seed)
-    main()
+    main(args)
